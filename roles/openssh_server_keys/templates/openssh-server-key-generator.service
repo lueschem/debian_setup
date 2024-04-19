@@ -1,0 +1,10 @@
+[Unit]
+Description=Generate host keys for openssh-server.
+Before=ssh.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/edi-ssh-host-keys "{{ ssh_host_key_backup_folder }}"
+
+[Install]
+RequiredBy=multi-user.target

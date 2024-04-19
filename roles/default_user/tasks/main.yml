@@ -1,0 +1,40 @@
+---
+- name: Add a group for the default user.
+  group:
+    name: "{{ default_user_group_name }}"
+    gid: "{{ default_user_gid }}"
+    state: present
+
+- name: Add the default user.
+  user:
+    name: "{{ default_user_name }}"
+    group: "{{ default_user_group_name }}"
+    uid: "{{ default_user_uid }}"
+    shell: "{{ default_user_shell }}"
+    groups: "{{ default_user_groups }}"
+    password: "{{ default_user_password }}"
+    append: yes
+    update_password: on_create
+
+- name: Enable sudo without password for the default user.
+  template:
+    src: no_passwd
+    dest: /etc/sudoers.d/{{ default_user_name }}
+  when: "'sudo' in default_user_groups.replace(' ', '').split(',') and default_user_password == '*'"
+
+- name: Set up authorized keys for current user.
+  authorized_key:
+    user: '{{ default_user_name }}'
+    state: present
+    key: '{{ item }}'
+  with_file: '{{ edi_current_user_ssh_pub_keys }}'
+  when: authorize_current_user
+
+- name: Set up authorized keys for group of users.
+  authorized_key:
+    user: '{{ default_user_name }}'
+    state: present
+    key: "{{ lookup('file', '{{ item }}') }}"
+  with_fileglob: '{{ ssh_pub_key_directory }}/*.pub'
+  when: ssh_pub_key_directory != ""
+
