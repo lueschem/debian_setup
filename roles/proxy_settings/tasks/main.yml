@@ -59,4 +59,4 @@
     state: absent
   loop: "{{ proxy_configs }}"
   no_log: true # do not reveal passwords
-  when: not item.value and not item.apt_key
+  when: not item.value and item.apt_key
