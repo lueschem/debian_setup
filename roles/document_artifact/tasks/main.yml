@@ -3,6 +3,7 @@
   file:
     dest: "{{ documentation_directory }}"
     state: directory
+    mode: 0755
   when: document_build_setup or document_installed_packages
 
 - name: Get project configuration scm revision.
@@ -10,13 +11,14 @@
   delegate_to: 127.0.0.1
   register: project_scm_revision
   changed_when: false
-  become: no
+  become: false
   when: document_build_setup
 
 - name: Write build information file.
   template:
     src: build.yml
     dest: "{{ documentation_directory }}/{{ build_documentation_file }}"
+    mode: 0644
   when: document_build_setup
 
 - name: Generate a list of installed packages.
@@ -29,14 +31,16 @@
   template:
     src: packages
     dest: "{{ documentation_directory }}/{{ package_documentation_file }}"
+    mode: 0644
   when: document_installed_packages
 
 - name: Document the packages baseline.
   copy:
     src: "{{ item }}"
     dest: "{{ documentation_directory }}/{{ package_baseline_documentation_file }}"
+    mode: 0644
   with_first_found:
     - files:
-      - "{{ package_baseline_source_file }}"
+      - "{{ package_baseline_source_file }}" # noqa: yaml
       skip: true
   when: document_installed_packages

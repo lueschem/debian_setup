@@ -1,7 +1,7 @@
 ---
 - name: Check if openssh-server is installed.
   command: dpkg -s openssh-server
-  ignore_errors: True
+  ignore_errors: true
   changed_when: false
   register: openssh_server_installed
 
@@ -30,12 +30,14 @@
   template:
     src: openssh-server-key-generator.service
     dest: /lib/systemd/system/
+    mode: 0644
   when: openssh_server_installed is succeeded
 
 - name: Create a directory that will receive the systemd symbolic link.
   file:
     path: /etc/systemd/system/multi-user.target.requires
     state: directory
+    mode: 0755
   when: openssh_server_installed is succeeded
 
 - name: Enable the systemd service that re-generates the openssh-server keys.
@@ -46,8 +48,8 @@
   when: openssh_server_installed is succeeded
 
 # Works only with newer Ansible versions (since systemd is not running):
-#- name: Enable the systemd service that re-generates the openssh-server keys.
-#  systemd:
-#    name: openssh-server-key-generator.service
-#    enabled: yes
-#  when: openssh_server_installed is succeeded
+# - name: Enable the systemd service that re-generates the openssh-server keys.
+#   systemd:
+#     name: openssh-server-key-generator.service
+#     enabled: true
+#   when: openssh_server_installed is succeeded

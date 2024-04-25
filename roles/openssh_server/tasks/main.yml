@@ -3,13 +3,13 @@
   apt:
     name: openssh-server
     state: present
-    install_recommends: no
+    install_recommends: false
 
 - name: Stop accepting locale settings on ssh server.
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^AcceptEnv(.*)'
-    backrefs: yes
+    backrefs: true
     line: '# AcceptEnv\1'
   notify:
     - Restart ssh daemon.
@@ -18,7 +18,7 @@
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^#*\s*PasswordAuthentication\s*(yes|no)$'
-    backrefs: yes
+    backrefs: true
     line: 'PasswordAuthentication no'
   when: disable_ssh_password_authentication
   notify:

@@ -1,2 +1,2 @@
 ---
-disable_ssh_password_authentication: True
+disable_ssh_password_authentication: true

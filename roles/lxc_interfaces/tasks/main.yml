@@ -13,6 +13,7 @@
   template:
     src: default_interface.j2
     dest: /etc/network/interfaces.d/{{ edi_lxc_network_interface_name }}
+    mode: 0644
   register: default_interface_result
   when: lxc_network_interface_manager == "ifupdown"
 

@@ -4,11 +4,11 @@
     dest: /etc/hostname
     regexp: '^edi-[a-z0-9]{8}-[a-z0-9]{8}$'
     line: '{{ hostname }}'
-    backrefs: yes
+    backrefs: true
 
 - name: Replace temporary hostname in /etc/hosts file.
   lineinfile:
     dest: /etc/hosts
     regexp: '^(127\.0\.1\.1.*)edi-[a-z0-9]{8}-[a-z0-9]{8}(.*)$'
     line: '\1{{ hostname }}\2'
-    backrefs: yes
+    backrefs: true

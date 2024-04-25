@@ -12,10 +12,11 @@
     shell: "{{ gitops_user_shell }}"
     groups: "{{ gitops_user_groups }}"
     password: "{{ gitops_user_password }}"
-    append: yes
+    append: true
     update_password: on_create
 
 - name: Enable sudo without password for the gitops user.
   template:
     src: no_passwd
     dest: /etc/sudoers.d/{{ gitops_user_name }}
+    mode: 0440

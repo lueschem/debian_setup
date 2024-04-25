@@ -19,11 +19,14 @@
     shell: /bin/bash
     groups: adm,sudo
     password: "$6$nqXAG09MHYE$MZ6kZGJyVcU6ETl.YjCs0fX9y0BOA3qzTkjgoYYUceT4tTgaVbVs0Aeh4kBZqLqLRlSrzhLKLOCEV/uUagm351"
-    append: yes
+    append: true
     update_password: on_create
 
 - name: Enable sudo without password for the development user.
-  template: src=no_passwd dest=/etc/sudoers.d/{{ edi_current_user_name }}
+  template:
+    src: no_passwd
+    dest: /etc/sudoers.d/{{ edi_current_user_name }}
+    mode: 0440
 
 - name: Set up authorized keys for current user.
   authorized_key:

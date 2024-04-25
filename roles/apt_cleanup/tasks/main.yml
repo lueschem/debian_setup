@@ -6,11 +6,11 @@
 
 - name: Remove unused packages.
   apt:
-    autoremove: yes
+    autoremove: true
   when: edi_create_distributable_image
 
 # the apt module supports apt-get clean only from ansible-core 2.13 onwards
-- name: Clean apt cache.
+- name: Clean apt cache. # noqa command-instead-of-module
   command: apt-get -y clean
   when: edi_create_distributable_image
 

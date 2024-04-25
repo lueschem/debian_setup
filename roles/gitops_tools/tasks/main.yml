@@ -3,7 +3,7 @@
   apt:
     name: "{{ gitops_packages }}"
     state: present
-    install_recommends: no
+    install_recommends: false
 
 - name: Install Mender hook script for Ansible.
   template:

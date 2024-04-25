@@ -8,5 +8,5 @@ default_user_shell: /bin/bash
 default_user_groups: adm,sudo
 # password=ChangeMe!
 default_user_password: "$6$nqXAG09MHYE$MZ6kZGJyVcU6ETl.YjCs0fX9y0BOA3qzTkjgoYYUceT4tTgaVbVs0Aeh4kBZqLqLRlSrzhLKLOCEV/uUagm351"
-authorize_current_user: False
+authorize_current_user: false
 ssh_pub_key_directory: ""

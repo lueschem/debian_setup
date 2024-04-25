@@ -1,6 +1,6 @@
 ---
 # Workaround for "Failed to lock apt for exclusive operation".
-- name: Initialize apt.
+- name: Initialize apt. # noqa command-instead-of-module
   command: apt-get update
   changed_when: false
 
@@ -8,24 +8,25 @@
   file:
     dest: /etc/apt/sources.list
     state: absent
-  when: base_system_sources_list_template != ""
+  when: base_system_sources_list_template
 
 - name: Re-add sources list file according to template.
   template:
     src: "{{ base_system_sources_list_template }}"
     dest: /etc/apt/sources.list.d/
-  when: base_system_sources_list_template != ""
+    mode: 0644
+  when: base_system_sources_list_template
 
 - name: Prevent service startup during package installation.
   copy:
     src: policy-rc.d
     dest: /usr/sbin/
-    mode: 755
+    mode: 0755
   when: edi_create_distributable_image
 
 - name: Update and upgrade apt.
   apt:
-    update_cache: yes
+    update_cache: true
     upgrade: dist
 
 - name: Prevent documentation installation and remove existing documentation.
@@ -44,4 +45,4 @@
   script: "{{ translations_filter }} {{ dpkg_translations_filter }}"
   args:
     creates: "{{ dpkg_translations_filter }}"
-  when: translations_filter != ""
+  when: translations_filter
