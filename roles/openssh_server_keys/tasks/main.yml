@@ -17,8 +17,7 @@
     path: "{{ item.path }}"
     state: absent
   when: openssh_server_installed is succeeded
-  with_items:
-    - "{{ openssh_server_keys.files }}"
+  loop: "{{ openssh_server_keys.files }}"
 
 - name: Add script that provisions the ssh host keys.
   copy:

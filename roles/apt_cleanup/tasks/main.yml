@@ -26,5 +26,4 @@
     path: "{{ item.path }}"
     state: absent
   when: edi_create_distributable_image and not item.path == "/var/lib/apt/lists/lock"
-  with_items:
-    - "{{ apt_lists.files }}"
+  loop: "{{ apt_lists.files }}"
