@@ -1,12 +1,12 @@
 ---
 - name: Add a group for the default user.
-  group:
+  ansible.builtin.group:
     name: "{{ default_user_group_name }}"
     gid: "{{ default_user_gid }}"
     state: present
 
 - name: Add the default user.
-  user:
+  ansible.builtin.user:
     name: "{{ default_user_name }}"
     group: "{{ default_user_group_name }}"
     uid: "{{ default_user_uid }}"
@@ -17,14 +17,14 @@
     update_password: on_create
 
 - name: Enable sudo without password for the default user.
-  template:
+  ansible.builtin.template:
     src: no_passwd
     dest: /etc/sudoers.d/{{ default_user_name }}
-    mode: 0440
+    mode: '0440'
   when: "'sudo' in default_user_groups.replace(' ', '').split(',') and default_user_password == '*'"
 
 - name: Set up authorized keys for current user.
-  authorized_key:
+  ansible.posix.authorized_key:
     user: '{{ default_user_name }}'
     state: present
     key: '{{ item }}'
@@ -32,7 +32,7 @@
   when: authorize_current_user
 
 - name: Set up authorized keys for group of users.
-  authorized_key:
+  ansible.posix.authorized_key:
     user: '{{ default_user_name }}'
     state: present
     key: "{{ lookup('file', '{{ item }}') }}"

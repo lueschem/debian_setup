@@ -1,12 +1,12 @@
 ---
 - name: Install gitops related packages.
-  apt:
+  ansible.builtin.apt:
     name: "{{ gitops_packages }}"
     state: present
     install_recommends: false
 
 - name: Install Mender hook script for Ansible.
-  template:
+  ansible.builtin.template:
     src: 50_mender_ansible
     dest: /usr/lib/mender-configure/apply-device-config.d/
-    mode: 0755
+    mode: '0755'

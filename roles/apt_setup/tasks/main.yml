@@ -1,48 +1,48 @@
 ---
 # Workaround for "Failed to lock apt for exclusive operation".
 - name: Initialize apt. # noqa command-instead-of-module
-  command: apt-get update
+  ansible.builtin.command: apt-get update
   changed_when: false
 
 - name: Remove sources.list file that got added by debootstrap.
-  file:
+  ansible.builtin.file:
     dest: /etc/apt/sources.list
     state: absent
   when: base_system_sources_list_template
 
 - name: Re-add sources list file according to template.
-  template:
+  ansible.builtin.template:
     src: "{{ base_system_sources_list_template }}"
     dest: /etc/apt/sources.list.d/
-    mode: 0644
+    mode: '0644'
   when: base_system_sources_list_template
 
 - name: Prevent service startup during package installation.
-  copy:
+  ansible.builtin.copy:
     src: policy-rc.d
     dest: /usr/sbin/
-    mode: 0755
+    mode: '0755'
   when: edi_create_distributable_image
 
 - name: Update and upgrade apt.
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     upgrade: dist
 
 - name: Prevent documentation installation and remove existing documentation.
-  script: remove_documentation {{ dpkg_no_documentation }}
+  ansible.builtin.script: remove_documentation {{ dpkg_no_documentation }}
   args:
     creates: "{{ dpkg_no_documentation }}"
   when: install_documentation == 'minimal' or install_documentation is sameas false
 
 - name: Prevent documentation installation and remove existing documentation but keep changelog.
-  script: remove_documentation_keep_changelog {{ dpkg_no_documentation }}
+  ansible.builtin.script: remove_documentation_keep_changelog {{ dpkg_no_documentation }}
   args:
     creates: "{{ dpkg_no_documentation }}"
   when: install_documentation == 'changelog'
 
 - name: Install only a subset of translations.
-  script: "{{ translations_filter }} {{ dpkg_translations_filter }}"
+  ansible.builtin.script: "{{ translations_filter }} {{ dpkg_translations_filter }}"
   args:
     creates: "{{ dpkg_translations_filter }}"
   when: translations_filter

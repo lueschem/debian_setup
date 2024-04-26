@@ -1,10 +1,10 @@
 ---
 - name: Enable foreign architectures.
-  command: bash -c "dpkg --add-architecture {{ item }} && touch /etc/{{ item }}.enabled.edi"
+  ansible.builtin.command: bash -c "dpkg --add-architecture {{ item }} && touch /etc/{{ item }}.enabled.edi"
   args:
     creates: /etc/{{ item }}.enabled.edi
   loop: "{{ cross_architectures }}"
 
 - name: Update apt cache.
-  apt:
+  ansible.builtin.apt:
     update_cache: true

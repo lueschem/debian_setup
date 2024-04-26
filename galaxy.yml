@@ -7,7 +7,7 @@ authors:
 description: Debian recipes that extend and complement the edi tool.
 license:
   - MIT
-tags: [edi, debian]
+tags: [linux, tools, edi, debian]
 repository: https://github.com/lueschem/debian_setup
 documentation: https://docs.get-edi.io
 homepage: https://www.get-edi.io/

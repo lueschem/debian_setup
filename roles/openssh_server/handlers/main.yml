@@ -1,6 +1,6 @@
 ---
 - name: Restart ssh daemon.
-  service:
+  ansible.builtin.service:
     name: ssh
     state: restarted
   when: not edi_create_distributable_image

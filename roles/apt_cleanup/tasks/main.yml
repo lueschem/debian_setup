@@ -1,28 +1,29 @@
 ---
 - name: Remove service startup prevention.
-  file:
+  ansible.builtin.file:
     dest: /usr/sbin/policy-rc.d
     state: absent
 
 - name: Remove unused packages.
-  apt:
+  ansible.builtin.apt:
     autoremove: true
   when: edi_create_distributable_image
 
-# the apt module supports apt-get clean only from ansible-core 2.13 onwards
+# Due to https://github.com/ansible/ansible/issues/82611 we are using apt-get clean directly here.
 - name: Clean apt cache. # noqa command-instead-of-module
-  command: apt-get -y clean
+  ansible.builtin.command: apt-get -y clean
+  changed_when: false
   when: edi_create_distributable_image
 
 - name: Identify apt lists.
-  find:
+  ansible.builtin.find:
     paths: /var/lib/apt/lists
     patterns: "*"
   register: apt_lists
   when: edi_create_distributable_image
 
 - name: Remove apt lists that will get re-downloaded using apt-get update.
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
   when: edi_create_distributable_image and not item.path == "/var/lib/apt/lists/lock"

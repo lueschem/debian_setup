@@ -1,12 +1,12 @@
 ---
 - name: Install openssh server.
-  apt:
+  ansible.builtin.apt:
     name: openssh-server
     state: present
     install_recommends: false
 
 - name: Stop accepting locale settings on ssh server.
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^AcceptEnv(.*)'
     backrefs: true
@@ -15,7 +15,7 @@
     - Restart ssh daemon.
 
 - name: Disable ssh password authentication (modify existing config line).
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^#*\s*PasswordAuthentication\s*(yes|no)$'
     backrefs: true
@@ -25,7 +25,7 @@
     - Restart ssh daemon.
 
 - name: Disable ssh password authentication (add new config line).
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     line: 'PasswordAuthentication no'
     state: present
