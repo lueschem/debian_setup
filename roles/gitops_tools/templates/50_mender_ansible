@@ -126,7 +126,7 @@ then
     fi
 else
     # there is no VERSION_ID in testing
-    VERSION_ID="99"
+    VERSION_ID="13"
     source /etc/os-release
 
     PLAYBOOK_PACKAGE="${PLAYBOOK_URL}"
