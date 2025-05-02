@@ -1,10 +1,15 @@
 [Unit]
-Description=Generate host keys for openssh-server.
-Before=ssh.service
+Description=Generate or restore sshd host keys on first boot
+ConditionFirstBoot=yes
+ConditionPathIsReadWrite=/etc/ssh
+ConditionPathIsSymbolicLink=!/etc/ssh
+Before=first-boot-complete.target sshd-keygen.service ssh.service sshd.service sshd@.service
+Wants=first-boot-complete.target
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 ExecStart=/usr/bin/edi-ssh-host-keys "{{ ssh_host_key_backup_folder }}"
 
 [Install]
-RequiredBy=multi-user.target
+WantedBy=multi-user.target
