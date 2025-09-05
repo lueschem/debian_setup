@@ -8,14 +8,14 @@
   ansible.builtin.file:
     dest: /etc/apt/sources.list
     state: absent
-  when: base_system_sources_list_template
+  when: base_system_sources_list_template | length > 0
 
 - name: Re-add sources list file according to template.
   ansible.builtin.template:
     src: "{{ base_system_sources_list_template }}"
     dest: /etc/apt/sources.list.d/
     mode: '0644'
-  when: base_system_sources_list_template
+  when: base_system_sources_list_template | length > 0
 
 - name: Prevent service startup during package installation.
   ansible.builtin.copy:
@@ -45,4 +45,4 @@
   ansible.builtin.script: "{{ translations_filter }} {{ dpkg_translations_filter }}"
   args:
     creates: "{{ dpkg_translations_filter }}"
-  when: translations_filter
+  when: translations_filter | length > 0

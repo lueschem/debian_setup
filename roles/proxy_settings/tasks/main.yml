@@ -8,7 +8,7 @@
     mode: '0644'
   loop: "{{ proxy_configs }}"
   no_log: true # do not reveal passwords
-  when: item.value
+  when: item.value | length > 0
 
 - name: Setup /etc/environment (unset proxies).
   ansible.builtin.lineinfile:
@@ -17,7 +17,7 @@
     state: absent
   loop: "{{ proxy_configs }}"
   no_log: true # do not reveal passwords
-  when: not item.value
+  when: not item.value | length > 0
 
 # Remark: When using ansible_connection=lxd /etc/environment does not get sourced.
 #         For this reason we also add this settings to .bashrc of root.
@@ -30,7 +30,7 @@
     mode: '0644'
   loop: "{{ proxy_configs }}"
   no_log: true # do not reveal passwords
-  when: item.value
+  when: item.value | length > 0
 
 - name: Setup /root/.bashrc (unset proxies).
   ansible.builtin.lineinfile:
@@ -39,7 +39,7 @@
     state: absent
   loop: "{{ proxy_configs }}"
   no_log: true # do not reveal passwords
-  when: not item.value
+  when: not item.value | length > 0
 
 - name: Setup /etc/apt/apt.conf.d/50proxy (set proxies).
   ansible.builtin.lineinfile:
@@ -50,7 +50,7 @@
     mode: '0644'
   loop: "{{ proxy_configs }}"
   no_log: true # do not reveal passwords
-  when: item.value and item.apt_key
+  when: item.value | length > 0 and item.apt_key | length > 0
 
 - name: Setup /etc/apt/apt.conf.d/50proxy (unset proxies).
   ansible.builtin.lineinfile:
@@ -59,4 +59,4 @@
     state: absent
   loop: "{{ proxy_configs }}"
   no_log: true # do not reveal passwords
-  when: not item.value and item.apt_key
+  when: not (item.value | length > 0 and item.apt_key | length > 0)
