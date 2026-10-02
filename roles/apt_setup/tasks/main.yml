@@ -1,10 +1,5 @@
 ---
-# Workaround for "Failed to lock apt for exclusive operation".
-- name: Initialize apt. # noqa command-instead-of-module
-  ansible.builtin.command: apt-get update
-  changed_when: false
-
-- name: Remove sources.list file that got added by debootstrap.
+- name: Remove sources.list file that got added by bootstrap tool.
   ansible.builtin.file:
     dest: /etc/apt/sources.list
     state: absent
